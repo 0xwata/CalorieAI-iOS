@@ -1,0 +1,148 @@
+📌 MVVM + Layered Architectureの書き方・設計原則
+① 単方向依存（依存方向の徹底）
+上位層（View）から下位層（Infrastructure）へ一方向にのみ依存する
+下位層は上位層を知らない（ViewやViewModelをDomainやInfrastructureで参照しない）
+pgsql
+コピーする
+編集する
+View → ViewModel → Application → Domain ← Infrastructure
+② View層の原則（受動的であること）
+Viewにはロジックをほぼ書かず、ViewModelが公開したデータ・イベントを受け取り表示する
+状態の監視、イベントハンドラ以外のロジックは原則禁止
+✅ 推奨例：
+
+typescript
+コピーする
+編集する
+// ViewはViewModelからデータを取得して表示に専念する
+<Text>{viewModel.userName}</Text>
+❌ 非推奨例：
+
+typescript
+コピーする
+編集する
+// Viewにビジネスロジックを書くことは禁止
+if (user.age > 18) {
+  // ...
+}
+③ ViewModel層の原則（状態管理・イベント管理）
+Viewの表示状態を保持し、UIに対してバインド可能なプロパティ・イベントを提供する
+ViewModelはApplication層を利用し、ビジネスロジックを自身で抱えない
+✅ 推奨例：
+
+typescript
+コピーする
+編集する
+class UserViewModel {
+  userName: string = '';
+
+  constructor(private userUseCase: IUserUseCase) {}
+
+  async loadUser(userId: string) {
+    const user = await this.userUseCase.fetchUser(userId);
+    this.userName = user.name;
+  }
+}
+❌ 非推奨例：
+
+typescript
+コピーする
+編集する
+class UserViewModel {
+  userName: string = '';
+
+  async fetchUserFromApi(userId: string) {
+    // 直接Infrastructure層を呼ぶのはNG
+    const response = await axios.get(`api/users/${userId}`);
+    this.userName = response.data.name;
+  }
+}
+④ Application層（ユースケース）の原則
+具体的なビジネスロジックを実行する
+ドメイン層とInfrastructure層の橋渡し役
+ViewModelやControllerなどに対して公開される明確な操作を提供する
+✅ 推奨例：
+
+typescript
+コピーする
+編集する
+class UserUseCase implements IUserUseCase {
+  constructor(private userRepository: IUserRepository) {}
+
+  async fetchUser(userId: string): Promise<User> {
+    return await this.userRepository.getById(userId);
+  }
+}
+❌ 非推奨例：
+
+typescript
+コピーする
+編集する
+// Infrastructure層の知識や具体的実装をApplication層で意識しすぎることはNG
+class UserUseCase {
+  async fetchUser(userId: string): Promise<User> {
+    return await axios.get(`/user/${userId}`); // Infrastructureの直接利用はNG
+  }
+}
+⑤ Domain層の原則（ビジネス中心の設計）
+ドメインモデル（Entity・Value Object）には純粋なビジネスロジックのみ記述
+技術的実装（永続化、ネットワークなど）は含めない
+✅ 推奨例：
+
+typescript
+コピーする
+編集する
+// ドメイン層の例（Entity）
+class User {
+  constructor(public readonly id: string, public readonly name: string) {}
+
+  isAdult(age: number): boolean {
+    return age >= 18;
+  }
+}
+❌ 非推奨例：
+
+typescript
+コピーする
+編集する
+// ドメイン層にInfrastructureの知識は入れない
+class User {
+  saveToDb() { /* NG */ }
+}
+⑥ Infrastructure層の原則（データアクセスの抽象化）
+DBや外部APIとの通信はここで行い、Repositoryパターン等でインターフェースを抽象化する
+✅ 推奨例：
+
+typescript
+コピーする
+編集する
+class UserRepository implements IUserRepository {
+  async getById(id: string): Promise<User> {
+    const response = await axios.get(`api/users/${id}`);
+    return new User(response.data.id, response.data.name);
+  }
+}
+📌 その他の推奨設計原則
+原則	説明
+SOLID原則	責務の単一性、オープンクローズドの原則を徹底
+DRY原則	同じロジックを複数箇所に書かない
+DI（依存性注入）	依存性の管理にDIを使い、疎結合化
+データバインディング	ViewとViewModel間のデータの受け渡しを明示的に行う
+✅ 理想的な依存方向（まとめ）
+pgsql
+コピーする
+編集する
+View ← ViewModel ← Application ← Domain → Infrastructure
+Domainは中心で、Infrastructureを抽象的に参照
+Application層がDomainの操作を担う
+ViewModelはApplication経由でドメインを呼び出す
+ViewはViewModelを監視・操作
+このようにレイヤーを明確に分け、責務を適切に分担することで、保守性・テスト容易性が向上し、拡張や変更にも強い設計が実現します。
+
+
+
+
+
+
+
+

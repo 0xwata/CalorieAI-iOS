@@ -1,0 +1,11 @@
+### iOS ネイティブ版（Swift UI）
+- フロントエンド
+  - Swift UI
+  - Combine
+  - SwiftGen（リソース管理）
+- バックエンド
+  - Supabase Swift Client
+- ユニットテスト
+  - XCTest
+- フォーマッター
+  - SwiftLint

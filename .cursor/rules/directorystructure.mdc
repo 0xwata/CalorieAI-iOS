@@ -1,0 +1,44 @@
+## ディレクトリ構成
+
+CalorieAI/
+├── Presentation/
+│   ├── Onboarding/
+│   │   ├── Screens/
+│   │   │   ├── LanguageSelectionScreen.swift
+│   │   │   ├── GenderSelectionScreen.swift
+│   │   │   └── GoalSettingScreen.swift
+│   │   └── ViewModels/
+│   │       ├── LanguageSelectionViewModel.swift
+│   │       ├── GenderSelectionViewModel.swift
+│   │       └── GoalSettingViewModel.swift
+│   ├── Tracking/
+│   │   ├── Screens/
+│   │   └── ViewModels/
+│   ├── Settings/
+│   │   ├── Screens/
+│   │   └── ViewModels/
+│   ├── .....
+│   ├── Components/
+│   │   ├── Common/
+│   │   └── Custom/
+│   └── Router/
+│       ├── AppRouter.swift
+│       ├── OnboardingRouter.swift
+│       ├── TrackingRouter.swift
+│       └── SettingsRouter.swift
+├── Domain/
+│   ├── Models/
+│   ├── UseCases/
+│   └── Repositories/
+├── Data/
+│   ├── Services/
+│   ├── Networking/
+│   └── Database/
+├── Core/
+│   ├── Extensions/
+│   ├── Utilities/
+│   └── Constants/
+└── Tests/
+    ├── UnitTests/
+    ├── UITests/
+    └── SnapshotTests/
