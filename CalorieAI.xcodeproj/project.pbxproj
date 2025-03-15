@@ -29,9 +29,36 @@
 		913B3F2C2D81A1C200D3031E /* CalorieAIUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CalorieAIUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		91DAA7C92D85726400609EDC /* Exceptions for "CalorieAI" folder in "CalorieAI" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Core/Constants/.gitkeep,
+				Core/Extensions/.gitkeep,
+				Core/Utilities/.gitkeep,
+				Data/Database/.gitkeep,
+				Data/Networking/.gitkeep,
+				Data/Services/.gitkeep,
+				Domain/Models/.gitkeep,
+				Domain/Repositories/.gitkeep,
+				Domain/UseCases/.gitkeep,
+				Presentation/Components/Common/.gitkeep,
+				Presentation/Onboarding/ViewModels/.gitkeep,
+				Presentation/Router/.gitkeep,
+				Presentation/Settings/Screens/.gitkeep,
+				Presentation/Settings/ViewModels/.gitkeep,
+				Presentation/Tracking/ViewModels/.gitkeep,
+			);
+			target = 913B3F102D81A1C100D3031E /* CalorieAI */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		913B3F132D81A1C100D3031E /* CalorieAI */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				91DAA7C92D85726400609EDC /* Exceptions for "CalorieAI" folder in "CalorieAI" target */,
+			);
 			path = CalorieAI;
 			sourceTree = "<group>";
 		};

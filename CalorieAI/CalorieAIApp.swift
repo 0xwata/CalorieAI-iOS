@@ -9,6 +9,8 @@ import SwiftUI
 
 @main
 struct CalorieAIApp: App {
+    @State private var showSimpleSplashScreen = true
+    @State private var showWelcomeScreen = false
     @State private var currentScreen: OnboardingScreen = .language
     
     // ユーザー設定
@@ -35,84 +37,99 @@ struct CalorieAIApp: App {
     
     var body: some Scene {
         WindowGroup {
-            NavigationView {
-                Group {
-                    switch currentScreen {
-                    case .language:
-                        LanguageSelectionView(selectedLanguage: $selectedLanguage) {
-                            currentScreen = .gender
-                        }
-                    case .gender:
-                        GenderSelectionView(selectedGender: $selectedGender) {
-                            currentScreen = .workoutFrequency
-                        }
-                    case .workoutFrequency:
-                        WorkoutFrequencySelectionView(selectedFrequency: $selectedFrequency) {
-                            currentScreen = .source
-                        }
-                    case .source:
-                        SourceSelectionView(selectedSource: $selectedSource) {
-                            currentScreen = .calorieTrackingExperience
-                        }
-                    case .calorieTrackingExperience:
-                        CalorieTrackingAppExperienceView(hasExperience: $hasExperience) {
-                            currentScreen = .weightTransition
-                        }
-                    case .weightTransition:
-                        WeightTransitionGraphView {
-                            currentScreen = .heightWeight
-                        }
-                    case .heightWeight:
-                        HeightWeightInputView(
-                            isMetric: $isMetric,
-                            heightFeet: $heightFeet,
-                            heightInches: $heightInches,
-                            heightCm: $heightCm,
-                            weightLbs: $weightLbs,
-                            weightKg: $weightKg
-                        ) {
-                            currentScreen = .birthday
-                        }
-                    case .birthday:
-                        BirthdayInputView(
-                            selectedMonth: $selectedMonth,
-                            selectedDay: $selectedDay,
-                            selectedYear: $selectedYear
-                        ) {
-                            currentScreen = .desiredWeight
-                        }
-                    case .desiredWeight:
-                        DesiredWeightInputView(
-                            currentWeight: weightKg,
-                            targetWeight: $targetWeight
-                        ) {
-                            currentScreen = .weightLossSpeed
-                        }
-                    case .weightLossSpeed:
-                        WeightLossSpeedSelectionView(weightLossPerWeek: $weightLossPerWeek) {
-                            currentScreen = .goalObstacles
-                        }
-                    case .goalObstacles:
-                        GoalObstaclesSelectionView(selectedObstacle: $selectedObstacle) {
-                            currentScreen = .dietaryRestriction
-                        }
-                    case .dietaryRestriction:
-                        DietaryRestrictionSelectionView(selectedDiet: $selectedDiet) {
-                            currentScreen = .achievementGoal
-                        }
-                    case .achievementGoal:
-                        AchievementGoalSelectionView(selectedGoal: $selectedGoal) {
-                            currentScreen = .rating
-                        }
-                    case .rating:
-                        RatingView(rating: $rating) {
-                            currentScreen = .home
-                        }
-                    case .home:
-                        SplashScreenView()
+            if showSimpleSplashScreen {
+                SplashScreen(onComplete: {
+                    withAnimation {
+                        showSimpleSplashScreen = false
+                        showWelcomeScreen = true
                     }
+                })
+            } else if showWelcomeScreen {
+                WelcomeScreen(onComplete: {
+                    withAnimation {
+                        showWelcomeScreen = false
+                    }
+                })
+            } else {
+                NavigationView {
+                    Group {
+                        switch currentScreen {
+                        case .language:
+                            LanguageSelectionView(selectedLanguage: $selectedLanguage) {
+                                currentScreen = .gender
+                            }
+                        case .gender:
+                            GenderSelectionView(selectedGender: $selectedGender) {
+                                currentScreen = .workoutFrequency
+                            }
+                        case .workoutFrequency:
+                            WorkoutFrequencySelectionView(selectedFrequency: $selectedFrequency) {
+                                currentScreen = .source
+                            }
+                        case .source:
+                            SourceSelectionView(selectedSource: $selectedSource) {
+                                currentScreen = .calorieTrackingExperience
+                            }
+                        case .calorieTrackingExperience:
+                            CalorieTrackingAppExperienceView(hasExperience: $hasExperience) {
+                                currentScreen = .weightTransition
+                            }
+                        case .weightTransition:
+                            WeightTransitionGraphView {
+                                currentScreen = .heightWeight
+                            }
+                        case .heightWeight:
+                            HeightWeightInputView(
+                                isMetric: $isMetric,
+                                heightFeet: $heightFeet,
+                                heightInches: $heightInches,
+                                heightCm: $heightCm,
+                                weightLbs: $weightLbs,
+                                weightKg: $weightKg
+                            ) {
+                                currentScreen = .birthday
+                            }
+                        case .birthday:
+                            BirthdayInputView(
+                                selectedMonth: $selectedMonth,
+                                selectedDay: $selectedDay,
+                                selectedYear: $selectedYear
+                            ) {
+                                currentScreen = .desiredWeight
+                            }
+                        case .desiredWeight:
+                            DesiredWeightInputView(
+                                currentWeight: weightKg,
+                                targetWeight: $targetWeight
+                            ) {
+                                currentScreen = .weightLossSpeed
+                            }
+                        case .weightLossSpeed:
+                            WeightLossSpeedSelectionView(weightLossPerWeek: $weightLossPerWeek) {
+                                currentScreen = .goalObstacles
+                            }
+                        case .goalObstacles:
+                            GoalObstaclesSelectionView(selectedObstacle: $selectedObstacle) {
+                                currentScreen = .dietaryRestriction
+                            }
+                        case .dietaryRestriction:
+                            DietaryRestrictionSelectionView(selectedDiet: $selectedDiet) {
+                                currentScreen = .achievementGoal
+                            }
+                        case .achievementGoal:
+                            AchievementGoalSelectionView(selectedGoal: $selectedGoal) {
+                                currentScreen = .rating
+                            }
+                        case .rating:
+                            RatingView(rating: $rating) {
+                                currentScreen = .home
+                            }
+                        case .home:
+                            HomeView()
+                        }
+                    }
+                    .navigationBarHidden(true)
                 }
-                .navigationBarHidden(true)
             }
         }
     }

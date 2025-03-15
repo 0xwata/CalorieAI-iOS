@@ -8,3 +8,7 @@ DerivedData/
 .netrc
 .env
 *.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/project.xcworkspace/
+.gitkeep
