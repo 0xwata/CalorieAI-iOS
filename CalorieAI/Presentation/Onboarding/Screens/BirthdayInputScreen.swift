@@ -7,26 +7,23 @@
 
 import SwiftUI
 
-struct BirthdayInputView: View {
+struct BirthdayInputScreen: View {
     @Binding var selectedMonth: String
     @Binding var selectedDay: String
     @Binding var selectedYear: String
     let onContinue: () -> Void
+    @Environment(\.presentationMode) var presentationMode
     
-    let months = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    ]
-    
+    let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     let days = Array(1...31).map { String($0) }
-    let years = Array((1940...2010).reversed()).map { String($0) }
+    let years = Array(1900...2025).reversed().map { String($0) }
     
     var body: some View {
         VStack(spacing: 20) {
-            // 戻るボタンと進捗バー
+            // 戻るボタン
             HStack {
                 Button(action: {
-                    // 戻るアクション
+                    presentationMode.wrappedValue.dismiss()
                 }) {
                     Image(systemName: "arrow.left")
                         .font(.title2)
@@ -72,6 +69,11 @@ struct BirthdayInputView: View {
             
             // メインコンテンツ
             VStack(alignment: .leading, spacing: 16) {
+                Image("IMG_8944")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 200)
+                
                 Text("When were you born?")
                     .font(.largeTitle)
                     .fontWeight(.bold)
@@ -86,59 +88,23 @@ struct BirthdayInputView: View {
                     .frame(height: 40)
                 
                 // 生年月日選択
-                HStack(spacing: 10) {
-                    // 月選択
+                HStack {
                     Picker("Month", selection: $selectedMonth) {
                         ForEach(months, id: \.self) { month in
-                            Text(month).tag(month)
+                            Text(month)
                         }
                     }
-                    .pickerStyle(WheelPickerStyle())
-                    .frame(width: 120, height: 150)
-                    .clipped()
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color(.systemGray6))
-                    )
-                    .accessibilityLabel("月")
-                    .accessibilityValue("\(selectedMonth)")
-                    .accessibilityHint("上下にスワイプして月を選択してください")
-                    
-                    // 日選択
                     Picker("Day", selection: $selectedDay) {
                         ForEach(days, id: \.self) { day in
-                            Text(day).tag(day)
+                            Text(day)
                         }
                     }
-                    .pickerStyle(WheelPickerStyle())
-                    .frame(width: 80, height: 150)
-                    .clipped()
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color(.systemGray6))
-                    )
-                    .accessibilityLabel("日")
-                    .accessibilityValue("\(selectedDay)日")
-                    .accessibilityHint("上下にスワイプして日を選択してください")
-                    
-                    // 年選択
                     Picker("Year", selection: $selectedYear) {
                         ForEach(years, id: \.self) { year in
-                            Text(year).tag(year)
+                            Text(year)
                         }
                     }
-                    .pickerStyle(WheelPickerStyle())
-                    .frame(width: 100, height: 150)
-                    .clipped()
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color(.systemGray6))
-                    )
-                    .accessibilityLabel("年")
-                    .accessibilityValue("\(selectedYear)年")
-                    .accessibilityHint("上下にスワイプして年を選択してください")
                 }
-                .padding(.vertical)
                 
                 Spacer()
                 
@@ -168,7 +134,7 @@ struct BirthdayInputView: View {
 }
 
 #Preview {
-    BirthdayInputView(
+    BirthdayInputScreen(
         selectedMonth: .constant("April"),
         selectedDay: .constant("4"),
         selectedYear: .constant("1994"),

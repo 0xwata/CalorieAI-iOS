@@ -7,81 +7,92 @@
 
 import SwiftUI
 
-struct DietaryRestrictionSelectionView: View {
+struct DietaryRestrictionSelectionScreen: View {
     @Binding var selectedDiet: String
     let onContinue: () -> Void
+    @Environment(\.presentationMode) var presentationMode
     
     let diets = ["Classic", "Pescatarian", "Vegetarian", "Vegan"]
     
-    let icons = [
-        "Classic": "🍗",
-        "Pescatarian": "🐟",
-        "Vegetarian": "🥗",
-        "Vegan": "🌱"
-    ]
-    
     var body: some View {
         VStack(spacing: 20) {
-            // 通知バー
+            // 戻るボタン
             HStack {
-                Image(systemName: "person.circle.fill")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 40, height: 40)
-                    .foregroundColor(.gray)
-                    .accessibilityHidden(true)
-                
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text("times_sakai (ONIGIRI)")
-                            .font(.headline)
-                        
-                        Spacer()
-                        
-                        Text("今")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                    
-                    Text("Yuya Sakai: 作れそうか見てみてー")
-                        .font(.subheadline)
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    Image(systemName: "arrow.left")
+                        .font(.title2)
+                        .foregroundColor(.primary)
+                        .padding()
+                        .background(Circle().fill(Color(.systemGray6)))
                 }
+                .accessibilityLabel("戻る")
+                .accessibilityHint("前の画面に戻ります")
                 
-                Image(systemName: "chevron.right")
-                    .foregroundColor(.secondary)
-                    .accessibilityHidden(true)
+                Spacer()
+                
+                // 進捗バー
+                RoundedRectangle(cornerRadius: 2)
+                    .fill(Color.gray.opacity(0.3))
+                    .frame(height: 4)
+                    .overlay(
+                        HStack {
+                            RoundedRectangle(cornerRadius: 2)
+                                .fill(Color.black)
+                                .frame(width: 550, height: 4)
+                            Spacer()
+                        }
+                    )
+                    .padding(.horizontal)
+                
+                // 言語表示
+                Text("EN")
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(Color(.systemGray6))
+                    )
+                    .overlay(
+                        HStack {
+                            Text("🇺🇸")
+                                .font(.caption)
+                        }
+                    )
             }
-            .padding()
-            .background(Color(.systemGray6))
-            .cornerRadius(12)
             .padding(.horizontal)
-            .accessibilityElement(children: .combine)
-            .accessibilityLabel("通知: times_sakai (ONIGIRI)からのメッセージ")
-            .accessibilityValue("Yuya Sakai: 作れそうか見てみてー")
             
             // メインコンテンツ
             VStack(alignment: .leading, spacing: 16) {
+                Image("IMG_8951")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 200)
+                
                 Text("Do you follow a specific diet?")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .accessibilityAddTraits(.isHeader)
                 
+                Text("This will be used to calibrate your custom plan.")
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                    .accessibilityLabel("この情報はあなたのカスタムプランの作成に使用されます")
+                
                 Spacer()
                     .frame(height: 40)
                 
-                // 食事制限選択
+                // 食事制限選択ボタン
                 ForEach(diets, id: \.self) { diet in
                     Button(action: {
                         selectedDiet = diet
                     }) {
                         HStack {
-                            Text(icons[diet] ?? "")
-                                .font(.title2)
-                                .padding(.trailing, 8)
-                            
                             Text(diet)
                                 .font(.title3)
                                 .fontWeight(.medium)
+                                .foregroundColor(.primary)
                             
                             Spacer()
                         }
@@ -94,8 +105,8 @@ struct DietaryRestrictionSelectionView: View {
                         .foregroundColor(selectedDiet == diet ? .white : .primary)
                     }
                     .buttonStyle(PlainButtonStyle())
-                    .accessibilityLabel("\(diet)食を選択")
-                    .accessibilityHint("タップして\(diet)食を選択します")
+                    .accessibilityLabel("\(diet)を選択")
+                    .accessibilityHint("タップして\(diet)を選択します")
                     .accessibilityAddTraits(.isButton)
                     .accessibilityValue(selectedDiet == diet ? "選択中" : "")
                 }
@@ -118,12 +129,9 @@ struct DietaryRestrictionSelectionView: View {
                         )
                 }
                 .buttonStyle(PlainButtonStyle())
-                .disabled(selectedDiet.isEmpty)
-                .opacity(selectedDiet.isEmpty ? 0.6 : 1)
                 .accessibilityLabel("続行")
                 .accessibilityHint("次の画面に進みます")
                 .accessibilityAddTraits(.isButton)
-                .accessibilityValue(selectedDiet.isEmpty ? "食事制限が選択されていません" : "食事制限が選択されています")
             }
             .padding()
         }
@@ -131,5 +139,5 @@ struct DietaryRestrictionSelectionView: View {
 }
 
 #Preview {
-    DietaryRestrictionSelectionView(selectedDiet: .constant("Classic"), onContinue: {})
+    DietaryRestrictionSelectionScreen(selectedDiet: .constant("Classic"), onContinue: {})
 }

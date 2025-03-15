@@ -7,9 +7,10 @@
 
 import SwiftUI
 
-struct GenderSelectionView: View {
+struct GenderSelectionScreen: View {
     @Binding var selectedGender: String
     let onContinue: () -> Void
+    @Environment(\.presentationMode) var presentationMode
     
     let genders = ["Male", "Female", "Other"]
     
@@ -18,7 +19,7 @@ struct GenderSelectionView: View {
             // 戻るボタン
             HStack {
                 Button(action: {
-                    // 戻るアクション
+                    presentationMode.wrappedValue.dismiss()
                 }) {
                     Image(systemName: "arrow.left")
                         .font(.title2)
@@ -64,6 +65,11 @@ struct GenderSelectionView: View {
             
             // メインコンテンツ
             VStack(alignment: .leading, spacing: 16) {
+                Image("IMG_8938")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 200)
+                
                 Text("Choose your Gender")
                     .font(.largeTitle)
                     .fontWeight(.bold)
@@ -136,5 +142,5 @@ struct GenderSelectionView: View {
 }
 
 #Preview {
-    GenderSelectionView(selectedGender: .constant("male"), onContinue: {})
+    GenderSelectionScreen(selectedGender: .constant("male"), onContinue: {})
 }

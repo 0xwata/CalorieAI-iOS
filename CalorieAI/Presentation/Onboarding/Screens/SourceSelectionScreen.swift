@@ -7,27 +7,19 @@
 
 import SwiftUI
 
-struct SourceSelectionView: View {
+struct SourceSelectionScreen: View {
     @Binding var selectedSource: String
     let onContinue: () -> Void
+    @Environment(\.presentationMode) var presentationMode
     
     let sources = ["Instagram", "Facebook", "TikTok", "Youtube", "Google", "TV"]
     
-    let icons = [
-        "Instagram": "📷",
-        "Facebook": "👍",
-        "TikTok": "🎵",
-        "Youtube": "▶️",
-        "Google": "🔍",
-        "TV": "📺"
-    ]
-    
     var body: some View {
         VStack(spacing: 20) {
-            // 戻るボタンと進捗バー
+            // 戻るボタン
             HStack {
                 Button(action: {
-                    // 戻るアクション
+                    presentationMode.wrappedValue.dismiss()
                 }) {
                     Image(systemName: "arrow.left")
                         .font(.title2)
@@ -73,27 +65,34 @@ struct SourceSelectionView: View {
             
             // メインコンテンツ
             VStack(alignment: .leading, spacing: 16) {
+                Image("IMG_8940")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 200)
+                
                 Text("Where did you hear about us?")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .accessibilityAddTraits(.isHeader)
                 
-                Spacer()
-                    .frame(height: 20)
+                Text("This will be used to calibrate your custom plan.")
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                    .accessibilityLabel("この情報はあなたのカスタムプランの作成に使用されます")
                 
-                // 情報源選択ボタン
+                Spacer()
+                    .frame(height: 40)
+                
+                // ソース選択ボタン
                 ForEach(sources, id: \.self) { source in
                     Button(action: {
                         selectedSource = source
                     }) {
                         HStack {
-                            Text(icons[source] ?? "")
-                                .font(.title2)
-                                .padding(.trailing, 8)
-                            
                             Text(source)
                                 .font(.title3)
                                 .fontWeight(.medium)
+                                .foregroundColor(.primary)
                             
                             Spacer()
                         }
@@ -106,7 +105,7 @@ struct SourceSelectionView: View {
                         .foregroundColor(selectedSource == source ? .white : .primary)
                     }
                     .buttonStyle(PlainButtonStyle())
-                    .accessibilityLabel("\(source)で知りました")
+                    .accessibilityLabel("\(source)を選択")
                     .accessibilityHint("タップして\(source)を選択します")
                     .accessibilityAddTraits(.isButton)
                     .accessibilityValue(selectedSource == source ? "選択中" : "")
@@ -126,7 +125,7 @@ struct SourceSelectionView: View {
                         .padding()
                         .background(
                             RoundedRectangle(cornerRadius: 30)
-                                .fill(Color.gray)
+                                .fill(Color.black)
                         )
                 }
                 .buttonStyle(PlainButtonStyle())
@@ -135,7 +134,7 @@ struct SourceSelectionView: View {
                 .accessibilityLabel("続行")
                 .accessibilityHint("次の画面に進みます")
                 .accessibilityAddTraits(.isButton)
-                .accessibilityValue(selectedSource.isEmpty ? "情報源が選択されていません" : "情報源が選択されています")
+                .accessibilityValue(selectedSource.isEmpty ? "ソースが選択されていません" : "ソースが選択されています")
             }
             .padding()
         }
@@ -143,5 +142,5 @@ struct SourceSelectionView: View {
 }
 
 #Preview {
-    SourceSelectionView(selectedSource: .constant("Instagram"), onContinue: {})
+    SourceSelectionScreen(selectedSource: .constant("Instagram"), onContinue: {})
 }

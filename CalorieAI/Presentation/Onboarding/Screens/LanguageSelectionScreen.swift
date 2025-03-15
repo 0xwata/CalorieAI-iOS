@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct LanguageSelectionView: View {
+struct LanguageSelectionScreen: View {
     @Binding var selectedLanguage: String
     let onContinue: () -> Void
     
@@ -91,5 +91,5 @@ struct LanguageSelectionView: View {
 }
 
 #Preview {
-    LanguageSelectionView(selectedLanguage: .constant("English"), onContinue: {})
+    LanguageSelectionScreen(selectedLanguage: .constant("English"), onContinue: {})
 }

@@ -7,20 +7,17 @@
 
 import SwiftUI
 
-struct WeightLossSpeedSelectionView: View {
+struct WeightLossSpeedSelectionScreen: View {
     @Binding var weightLossPerWeek: Double
     let onContinue: () -> Void
-    
-    // 減量スピードの範囲設定
-    let minWeightLoss: Double = 0.1
-    let maxWeightLoss: Double = 1.5
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         VStack(spacing: 20) {
-            // 戻るボタンと進捗バー
+            // 戻るボタン
             HStack {
                 Button(action: {
-                    // 戻るアクション
+                    presentationMode.wrappedValue.dismiss()
                 }) {
                     Image(systemName: "arrow.left")
                         .font(.title2)
@@ -66,81 +63,40 @@ struct WeightLossSpeedSelectionView: View {
             
             // メインコンテンツ
             VStack(alignment: .leading, spacing: 16) {
+                Image("IMG_8948")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 200)
+                
                 Text("How fast do you want to reach your goal?")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .accessibilityAddTraits(.isHeader)
                 
+                Text("This will be used to calibrate your custom plan.")
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                    .accessibilityLabel("この情報はあなたのカスタムプランの作成に使用されます")
+                
                 Spacer()
                     .frame(height: 40)
                 
-                // 減量スピード設定
-                VStack(alignment: .center, spacing: 20) {
+                // 体重減少速度選択
+                HStack {
                     Text("Loss weight speed per week")
-                        .font(.headline)
-                        .foregroundColor(.secondary)
-                        .accessibilityAddTraits(.isHeader)
+                        .font(.title3)
+                        .fontWeight(.medium)
+                        .foregroundColor(.primary)
                     
-                    // 減量スピード表示
-                    Text("\(String(format: "%.1f", weightLossPerWeek)) kg")
-                        .font(.system(size: 48, weight: .bold))
-                        .accessibilityLabel("週あたりの減量目標")
-                        .accessibilityValue("週\(String(format: "%.1f", weightLossPerWeek))キログラム")
+                    Spacer()
                     
-                    // スライダー
-                    HStack {
-                        // 遅いアイコン
-                        Image(systemName: "tortoise.fill")
-                            .font(.title)
-                            .foregroundColor(.black)
-                            .accessibilityHidden(true)
-                        
-                        Slider(value: $weightLossPerWeek, in: minWeightLoss...maxWeightLoss)
-                            .accentColor(.black)
-                            .accessibilityLabel("減量スピードの調整")
-                            .accessibilityValue("週\(String(format: "%.1f", weightLossPerWeek))キログラム")
-                            .accessibilityHint("左右にスワイプして減量スピードを調整してください。最小週\(String(format: "%.1f", minWeightLoss))キログラムから最大週\(String(format: "%.1f", maxWeightLoss))キログラムまで設定できます。")
-                        
-                        // 速いアイコン
-                        Image(systemName: "hare.fill")
-                            .font(.title)
-                            .foregroundColor(.black)
-                            .accessibilityHidden(true)
-                    }
-                    
-                    // 目盛り
-                    HStack {
-                        Text("\(String(format: "%.1f", minWeightLoss)) kg")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        
-                        Spacer()
-                        
-                        Text("\(String(format: "%.1f", (minWeightLoss + maxWeightLoss) / 2)) kg")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        
-                        Spacer()
-                        
-                        Text("\(String(format: "%.1f", maxWeightLoss)) kg")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                    .padding(.horizontal)
-                    
-                    // 推奨表示
-                    Text("Recommended")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 16)
-                        .background(
-                            RoundedRectangle(cornerRadius: 16)
-                                .fill(Color(.systemGray6))
-                        )
-                        .accessibilityLabel("この減量スピードは推奨値です")
+                    Text("\(weightLossPerWeek, specifier: "%.1f") kg")
+                        .font(.title3)
+                        .fontWeight(.medium)
+                        .foregroundColor(.primary)
                 }
-                .padding()
+                
+                Slider(value: $weightLossPerWeek, in: 0.1...1.5, step: 0.1)
                 
                 Spacer()
                 
@@ -170,5 +126,5 @@ struct WeightLossSpeedSelectionView: View {
 }
 
 #Preview {
-    WeightLossSpeedSelectionView(weightLossPerWeek: .constant(1.0), onContinue: {})
+    WeightLossSpeedSelectionScreen(weightLossPerWeek: .constant(1.0), onContinue: {})
 }

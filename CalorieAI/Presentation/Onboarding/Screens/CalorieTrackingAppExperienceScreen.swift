@@ -7,23 +7,17 @@
 
 import SwiftUI
 
-struct CalorieTrackingAppExperienceView: View {
+struct CalorieTrackingAppExperienceScreen: View {
     @Binding var hasExperience: Bool
     let onContinue: () -> Void
-    
-    let options = ["No", "Yes"]
-    
-    let icons = [
-        "No": "👎",
-        "Yes": "👍"
-    ]
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         VStack(spacing: 20) {
-            // 戻るボタンと進捗バー
+            // 戻るボタン
             HStack {
                 Button(action: {
-                    // 戻るアクション
+                    presentationMode.wrappedValue.dismiss()
                 }) {
                     Image(systemName: "arrow.left")
                         .font(.title2)
@@ -69,27 +63,34 @@ struct CalorieTrackingAppExperienceView: View {
             
             // メインコンテンツ
             VStack(alignment: .leading, spacing: 16) {
+                Image("IMG_8941")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 200)
+                
                 Text("Have you tried other calorie tracking apps?")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .accessibilityAddTraits(.isHeader)
                 
+                Text("This will be used to calibrate your custom plan.")
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                    .accessibilityLabel("この情報はあなたのカスタムプランの作成に使用されます")
+                
                 Spacer()
                     .frame(height: 40)
                 
-                // 選択ボタン
-                ForEach(options, id: \.self) { option in
+                // 経験選択ボタン
+                HStack {
                     Button(action: {
-                        hasExperience = option == "Yes"
+                        hasExperience = false
                     }) {
                         HStack {
-                            Text(icons[option] ?? "")
-                                .font(.title2)
-                                .padding(.trailing, 8)
-                            
-                            Text(option)
+                            Text("No")
                                 .font(.title3)
                                 .fontWeight(.medium)
+                                .foregroundColor(.primary)
                             
                             Spacer()
                         }
@@ -97,15 +98,40 @@ struct CalorieTrackingAppExperienceView: View {
                         .frame(maxWidth: .infinity)
                         .background(
                             RoundedRectangle(cornerRadius: 12)
-                                .fill((option == "Yes" && hasExperience) || (option == "No" && !hasExperience) ? Color.black : Color(.systemGray6))
+                                .fill(!hasExperience ? Color.black : Color(.systemGray6))
                         )
-                        .foregroundColor((option == "Yes" && hasExperience) || (option == "No" && !hasExperience) ? .white : .primary)
+                        .foregroundColor(!hasExperience ? .white : .primary)
                     }
                     .buttonStyle(PlainButtonStyle())
-                    .accessibilityLabel("\(option == "Yes" ? "はい、使用経験があります" : "いいえ、使用経験はありません")")
-                    .accessibilityHint("タップして選択します")
+                    .accessibilityLabel("いいえを選択")
+                    .accessibilityHint("タップしていいえを選択します")
                     .accessibilityAddTraits(.isButton)
-                    .accessibilityValue((option == "Yes" && hasExperience) || (option == "No" && !hasExperience) ? "選択中" : "")
+                    .accessibilityValue(!hasExperience ? "選択中" : "")
+                    
+                    Button(action: {
+                        hasExperience = true
+                    }) {
+                        HStack {
+                            Text("Yes")
+                                .font(.title3)
+                                .fontWeight(.medium)
+                                .foregroundColor(.primary)
+                            
+                            Spacer()
+                        }
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(hasExperience ? Color.black : Color(.systemGray6))
+                        )
+                        .foregroundColor(hasExperience ? .white : .primary)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .accessibilityLabel("はいを選択")
+                    .accessibilityHint("タップしてはいを選択します")
+                    .accessibilityAddTraits(.isButton)
+                    .accessibilityValue(hasExperience ? "選択中" : "")
                 }
                 
                 Spacer()
@@ -136,5 +162,5 @@ struct CalorieTrackingAppExperienceView: View {
 }
 
 #Preview {
-    CalorieTrackingAppExperienceView(hasExperience: .constant(true), onContinue: {})
+    CalorieTrackingAppExperienceScreen(hasExperience: .constant(false), onContinue: {})
 }

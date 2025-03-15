@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct LanguageDialogView: View {
+struct LanguageDialog: View {
     let languages: [(String, String, String)]
     @Binding var isPresented: Bool
     @Binding var selectedLanguage: String
@@ -61,7 +61,7 @@ struct LanguageDialogView: View {
 }
 
 #Preview {
-    LanguageDialogView(
+    LanguageDialog(
         languages: [
             ("English", "🇺🇸", "EN"),
             ("Español", "🇪🇸", "ES")

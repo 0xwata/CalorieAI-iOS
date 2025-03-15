@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct WeightTransitionGraphView: View {
+struct WeightTransitionGraphScreen: View {
     let onContinue: () -> Void
     
     var body: some View {
@@ -209,5 +209,5 @@ struct WeightTransitionGraphView: View {
 }
 
 #Preview {
-    WeightTransitionGraphView(onContinue: {})
+    WeightTransitionGraphScreen(onContinue: {})
 }

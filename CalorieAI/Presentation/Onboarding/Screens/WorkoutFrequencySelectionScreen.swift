@@ -7,28 +7,19 @@
 
 import SwiftUI
 
-struct WorkoutFrequencySelectionView: View {
+struct WorkoutFrequencySelectionScreen: View {
     @Binding var selectedFrequency: String
     let onContinue: () -> Void
+    @Environment(\.presentationMode) var presentationMode
     
-    let frequencies = [
-        "0-2": "Workouts now and then",
-        "3-5": "A few workouts per week",
-        "6+": "Dedicated athlete"
-    ]
-    
-    let icons = [
-        "0-2": "•",
-        "3-5": "•••",
-        "6+": ":::"
-    ]
+    let frequencies = ["0-2", "3-5", "6+"]
     
     var body: some View {
         VStack(spacing: 20) {
-            // 戻るボタンと進捗バー
+            // 戻るボタン
             HStack {
                 Button(action: {
-                    // 戻るアクション
+                    presentationMode.wrappedValue.dismiss()
                 }) {
                     Image(systemName: "arrow.left")
                         .font(.title2)
@@ -74,6 +65,11 @@ struct WorkoutFrequencySelectionView: View {
             
             // メインコンテンツ
             VStack(alignment: .leading, spacing: 16) {
+                Image("IMG_8939")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 200)
+                
                 Text("How many workouts do you do per week?")
                     .font(.largeTitle)
                     .fontWeight(.bold)
@@ -88,24 +84,15 @@ struct WorkoutFrequencySelectionView: View {
                     .frame(height: 40)
                 
                 // ワークアウト頻度選択ボタン
-                ForEach(Array(frequencies.keys.sorted()), id: \.self) { key in
+                ForEach(frequencies, id: \.self) { frequency in
                     Button(action: {
-                        selectedFrequency = key
+                        selectedFrequency = frequency
                     }) {
                         HStack {
-                            Text(icons[key] ?? "")
-                                .font(.title2)
-                                .padding(.trailing, 8)
-                            
-                            VStack(alignment: .leading) {
-                                Text(key)
-                                    .font(.title3)
-                                    .fontWeight(.medium)
-                                
-                                Text(frequencies[key] ?? "")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                            }
+                            Text(frequency)
+                                .font(.title3)
+                                .fontWeight(.medium)
+                                .foregroundColor(.primary)
                             
                             Spacer()
                         }
@@ -113,15 +100,15 @@ struct WorkoutFrequencySelectionView: View {
                         .frame(maxWidth: .infinity)
                         .background(
                             RoundedRectangle(cornerRadius: 12)
-                                .fill(selectedFrequency == key ? Color.black : Color(.systemGray6))
+                                .fill(selectedFrequency == frequency ? Color.black : Color(.systemGray6))
                         )
-                        .foregroundColor(selectedFrequency == key ? .white : .primary)
+                        .foregroundColor(selectedFrequency == frequency ? .white : .primary)
                     }
                     .buttonStyle(PlainButtonStyle())
-                    .accessibilityLabel("週\(key)回のワークアウト")
-                    .accessibilityHint("\(frequencies[key] ?? "")。タップして選択します")
+                    .accessibilityLabel("\(frequency)を選択")
+                    .accessibilityHint("タップして\(frequency)を選択します")
                     .accessibilityAddTraits(.isButton)
-                    .accessibilityValue(selectedFrequency == key ? "選択中" : "")
+                    .accessibilityValue(selectedFrequency == frequency ? "選択中" : "")
                 }
                 
                 Spacer()
@@ -147,7 +134,7 @@ struct WorkoutFrequencySelectionView: View {
                 .accessibilityLabel("続行")
                 .accessibilityHint("次の画面に進みます")
                 .accessibilityAddTraits(.isButton)
-                .accessibilityValue(selectedFrequency.isEmpty ? "ワークアウト頻度が選択されていません" : "ワークアウト頻度が選択されています")
+                .accessibilityValue(selectedFrequency.isEmpty ? "頻度が選択されていません" : "頻度が選択されています")
             }
             .padding()
         }
@@ -155,5 +142,5 @@ struct WorkoutFrequencySelectionView: View {
 }
 
 #Preview {
-    WorkoutFrequencySelectionView(selectedFrequency: .constant("6+"), onContinue: {})
+    WorkoutFrequencySelectionScreen(selectedFrequency: .constant("3-5"), onContinue: {})
 }

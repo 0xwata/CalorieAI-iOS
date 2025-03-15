@@ -7,86 +7,92 @@
 
 import SwiftUI
 
-struct AchievementGoalSelectionView: View {
+struct AchievementGoalSelectionScreen: View {
     @Binding var selectedGoal: String
     let onContinue: () -> Void
+    @Environment(\.presentationMode) var presentationMode
     
-    let goals = [
-        "Eat and live healthier",
-        "Boost my energy and mood",
-        "Stay motivated and consistent",
-        "Feel better about my body"
-    ]
-    
-    let icons = [
-        "Eat and live healthier": "🍎",
-        "Boost my energy and mood": "☀️",
-        "Stay motivated and consistent": "💪",
-        "Feel better about my body": "🧘"
-    ]
+    let goals = ["Eat and live healthier", "Boost my energy and mood", "Stay motivated and consistent", "Feel better about my body"]
     
     var body: some View {
         VStack(spacing: 20) {
-            // 通知バー
+            // 戻るボタン
             HStack {
-                Image(systemName: "person.circle.fill")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 40, height: 40)
-                    .foregroundColor(.gray)
-                    .accessibilityHidden(true)
-                
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text("times_sakai (ONIGIRI)")
-                            .font(.headline)
-                        
-                        Spacer()
-                        
-                        Text("今")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                    
-                    Text("Yuya Sakai: 作れそうか見てみてー")
-                        .font(.subheadline)
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    Image(systemName: "arrow.left")
+                        .font(.title2)
+                        .foregroundColor(.primary)
+                        .padding()
+                        .background(Circle().fill(Color(.systemGray6)))
                 }
+                .accessibilityLabel("戻る")
+                .accessibilityHint("前の画面に戻ります")
                 
-                Image(systemName: "chevron.right")
-                    .foregroundColor(.secondary)
-                    .accessibilityHidden(true)
+                Spacer()
+                
+                // 進捗バー
+                RoundedRectangle(cornerRadius: 2)
+                    .fill(Color.gray.opacity(0.3))
+                    .frame(height: 4)
+                    .overlay(
+                        HStack {
+                            RoundedRectangle(cornerRadius: 2)
+                                .fill(Color.black)
+                                .frame(width: 600, height: 4)
+                            Spacer()
+                        }
+                    )
+                    .padding(.horizontal)
+                
+                // 言語表示
+                Text("EN")
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(Color(.systemGray6))
+                    )
+                    .overlay(
+                        HStack {
+                            Text("🇺🇸")
+                                .font(.caption)
+                        }
+                    )
             }
-            .padding()
-            .background(Color(.systemGray6))
-            .cornerRadius(12)
             .padding(.horizontal)
-            .accessibilityElement(children: .combine)
-            .accessibilityLabel("通知: times_sakai (ONIGIRI)からのメッセージ")
-            .accessibilityValue("Yuya Sakai: 作れそうか見てみてー")
             
             // メインコンテンツ
             VStack(alignment: .leading, spacing: 16) {
+                Image("IMG_8952")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 200)
+                
                 Text("What would you like to accomplish?")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .accessibilityAddTraits(.isHeader)
                 
+                Text("This will be used to calibrate your custom plan.")
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                    .accessibilityLabel("この情報はあなたのカスタムプランの作成に使用されます")
+                
                 Spacer()
                     .frame(height: 40)
                 
-                // 目標選択
+                // 目標選択ボタン
                 ForEach(goals, id: \.self) { goal in
                     Button(action: {
                         selectedGoal = goal
                     }) {
                         HStack {
-                            Text(icons[goal] ?? "")
-                                .font(.title2)
-                                .padding(.trailing, 8)
-                            
                             Text(goal)
                                 .font(.title3)
                                 .fontWeight(.medium)
+                                .foregroundColor(.primary)
                             
                             Spacer()
                         }
@@ -99,8 +105,8 @@ struct AchievementGoalSelectionView: View {
                         .foregroundColor(selectedGoal == goal ? .white : .primary)
                     }
                     .buttonStyle(PlainButtonStyle())
-                    .accessibilityLabel("\(goal)を目標にする")
-                    .accessibilityHint("タップして\(goal)を目標として選択します")
+                    .accessibilityLabel("\(goal)を選択")
+                    .accessibilityHint("タップして\(goal)を選択します")
                     .accessibilityAddTraits(.isButton)
                     .accessibilityValue(selectedGoal == goal ? "選択中" : "")
                 }
@@ -123,12 +129,9 @@ struct AchievementGoalSelectionView: View {
                         )
                 }
                 .buttonStyle(PlainButtonStyle())
-                .disabled(selectedGoal.isEmpty)
-                .opacity(selectedGoal.isEmpty ? 0.6 : 1)
                 .accessibilityLabel("続行")
                 .accessibilityHint("次の画面に進みます")
                 .accessibilityAddTraits(.isButton)
-                .accessibilityValue(selectedGoal.isEmpty ? "目標が選択されていません" : "目標が選択されています")
             }
             .padding()
         }
@@ -136,5 +139,5 @@ struct AchievementGoalSelectionView: View {
 }
 
 #Preview {
-    AchievementGoalSelectionView(selectedGoal: .constant("Eat and live healthier"), onContinue: {})
+    AchievementGoalSelectionScreen(selectedGoal: .constant("Eat and live healthier"), onContinue: {})
 }

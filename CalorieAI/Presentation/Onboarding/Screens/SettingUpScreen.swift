@@ -1,19 +1,13 @@
 //
-//  HeightWeightInputView.swift
+//  SettingUpView.swift
 //  CalorieAI
 //
-//  Created by wataru takamine on 2025/03/12.
+//  Created by wataru takamine on 2025/03/15.
 //
 
 import SwiftUI
 
-struct HeightWeightInputScreen: View {
-    @Binding var isMetric: Bool
-    @Binding var heightFeet: Int
-    @Binding var heightInches: Int
-    @Binding var heightCm: Int
-    @Binding var weightLbs: Int
-    @Binding var weightKg: Double
+struct SettingUpScreen: View {
     let onContinue: () -> Void
     @Environment(\.presentationMode) var presentationMode
     
@@ -43,7 +37,7 @@ struct HeightWeightInputScreen: View {
                         HStack {
                             RoundedRectangle(cornerRadius: 2)
                                 .fill(Color.black)
-                                .frame(width: 300, height: 4)
+                                .frame(width: 250, height: 4)
                             Spacer()
                         }
                     )
@@ -55,8 +49,7 @@ struct HeightWeightInputScreen: View {
                     .padding(.vertical, 4)
                     .background(
                         RoundedRectangle(cornerRadius: 8)
-                            .fill(Color(.systemGray6))
-                    )
+                            .fill(Color(.systemGray6)))
                     .overlay(
                         HStack {
                             Text("🇺🇸")
@@ -68,12 +61,12 @@ struct HeightWeightInputScreen: View {
             
             // メインコンテンツ
             VStack(alignment: .leading, spacing: 16) {
-                Image("IMG_8943")
+                Image("IMG_8958")
                     .resizable()
                     .scaledToFit()
                     .frame(height: 200)
                 
-                Text("Height & weight")
+                Text("We are setting up and display dialog to track activity")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .accessibilityAddTraits(.isHeader)
@@ -85,51 +78,6 @@ struct HeightWeightInputScreen: View {
                 
                 Spacer()
                     .frame(height: 40)
-                
-                // メトリック/インペリアル切り替え
-                Toggle(isOn: $isMetric) {
-                    Text(isMetric ? "Metric" : "Imperial")
-                        .font(.title3)
-                        .fontWeight(.medium)
-                        .foregroundColor(.primary)
-                }
-                .padding()
-                
-                // 身長入力
-                HStack {
-                    if isMetric {
-                        Picker("Height (cm)", selection: $heightCm) {
-                            ForEach(100..<250) { cm in
-                                Text("\(cm) cm")
-                            }
-                        }
-                    } else {
-                        Picker("Height (feet)", selection: $heightFeet) {
-                            ForEach(2..<9) { feet in
-                                Text("\(feet) ft")
-                            }
-                        }
-                        Picker("Height (inches)", selection: $heightInches) {
-                            ForEach(0..<12) { inches in
-                                Text("\(inches) in")
-                            }
-                        }
-                    }
-                }
-                
-                // 体重入力
-                HStack {
-                    if isMetric {
-                        TextField("Weight (kg)", value: $weightKg, formatter: NumberFormatter())
-                            .keyboardType(.decimalPad)
-                    } else {
-                        TextField("Weight (lbs)", value: $weightLbs, formatter: NumberFormatter())
-                            .keyboardType(.numberPad)
-                    }
-                }
-                .padding()
-                .background(Color(.systemGray6))
-                .cornerRadius(12)
                 
                 Spacer()
                 
@@ -159,13 +107,5 @@ struct HeightWeightInputScreen: View {
 }
 
 #Preview {
-    HeightWeightInputScreen(
-        isMetric: .constant(true),
-        heightFeet: .constant(5),
-        heightInches: .constant(10),
-        heightCm: .constant(178),
-        weightLbs: .constant(160),
-        weightKg: .constant(72.5),
-        onContinue: {}
-    )
+    SettingUpScreen(onContinue: {})
 }

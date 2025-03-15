@@ -33,6 +33,7 @@
 		91DAA7C92D85726400609EDC /* Exceptions for "CalorieAI" folder in "CalorieAI" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Assets.xcassets,
 				Core/Constants/.gitkeep,
 				Core/Extensions/.gitkeep,
 				Core/Utilities/.gitkeep,
@@ -42,12 +43,12 @@
 				Domain/Models/.gitkeep,
 				Domain/Repositories/.gitkeep,
 				Domain/UseCases/.gitkeep,
-				Presentation/Components/Common/.gitkeep,
 				Presentation/Onboarding/ViewModels/.gitkeep,
 				Presentation/Router/.gitkeep,
 				Presentation/Settings/Screens/.gitkeep,
 				Presentation/Settings/ViewModels/.gitkeep,
 				Presentation/Tracking/ViewModels/.gitkeep,
+				"Preview Content/Preview Assets.xcassets",
 			);
 			target = 913B3F102D81A1C100D3031E /* CalorieAI */;
 		};

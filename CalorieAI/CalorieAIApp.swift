@@ -7,14 +7,14 @@
 
 import SwiftUI
 
+
 @main
 struct CalorieAIApp: App {
     @State private var showSimpleSplashScreen = true
     @State private var showWelcomeScreen = false
-    @State private var currentScreen: OnboardingScreen = .language
+    @State private var currentScreen: OnboardingScreen = .gender
     
     // ユーザー設定
-    @State private var selectedLanguage: String = "English"
     @State private var selectedGender: String = ""
     @State private var selectedFrequency: String = ""
     @State private var selectedSource: String = ""
@@ -45,41 +45,45 @@ struct CalorieAIApp: App {
                     }
                 })
             } else if showWelcomeScreen {
-                WelcomeScreen(onComplete: {
-                    withAnimation {
-                        showWelcomeScreen = false
+                WelcomeScreen(
+                    onComplete: {
+                        withAnimation {
+                            showWelcomeScreen = false
+                        }
+                    },
+                    onGoToHome: {
+                        withAnimation {
+                            showWelcomeScreen = false
+                            currentScreen = .home
+                        }
                     }
-                })
+                )
             } else {
                 NavigationView {
                     Group {
                         switch currentScreen {
-                        case .language:
-                            LanguageSelectionView(selectedLanguage: $selectedLanguage) {
-                                currentScreen = .gender
-                            }
                         case .gender:
-                            GenderSelectionView(selectedGender: $selectedGender) {
+                            GenderSelectionScreen(selectedGender: $selectedGender) {
                                 currentScreen = .workoutFrequency
                             }
                         case .workoutFrequency:
-                            WorkoutFrequencySelectionView(selectedFrequency: $selectedFrequency) {
+                            WorkoutFrequencySelectionScreen(selectedFrequency: $selectedFrequency) {
                                 currentScreen = .source
                             }
                         case .source:
-                            SourceSelectionView(selectedSource: $selectedSource) {
+                            SourceSelectionScreen(selectedSource: $selectedSource) {
                                 currentScreen = .calorieTrackingExperience
                             }
                         case .calorieTrackingExperience:
-                            CalorieTrackingAppExperienceView(hasExperience: $hasExperience) {
-                                currentScreen = .weightTransition
+                            CalorieTrackingAppExperienceScreen(hasExperience: $hasExperience) {
+                                currentScreen = .longTermResults
                             }
-                        case .weightTransition:
-                            WeightTransitionGraphView {
+                        case .longTermResults:
+                            OWeightTransitionGraphScreen {
                                 currentScreen = .heightWeight
                             }
                         case .heightWeight:
-                            HeightWeightInputView(
+                            HeightWeightInputScreen(
                                 isMetric: $isMetric,
                                 heightFeet: $heightFeet,
                                 heightInches: $heightInches,
@@ -90,7 +94,7 @@ struct CalorieAIApp: App {
                                 currentScreen = .birthday
                             }
                         case .birthday:
-                            BirthdayInputView(
+                            BirthdayInputScreen(
                                 selectedMonth: $selectedMonth,
                                 selectedDay: $selectedDay,
                                 selectedYear: $selectedYear
@@ -98,40 +102,81 @@ struct CalorieAIApp: App {
                                 currentScreen = .desiredWeight
                             }
                         case .desiredWeight:
-                            DesiredWeightInputView(
-                                currentWeight: weightKg,
+                            DesiredWeightInputScreen(
+                                currentWeight: $weightKg,
                                 targetWeight: $targetWeight
                             ) {
+                                currentScreen = .gainingWeight
+                            }
+                        case .gainingWeight:
+                            GainingWeightScreen {
                                 currentScreen = .weightLossSpeed
                             }
                         case .weightLossSpeed:
-                            WeightLossSpeedSelectionView(weightLossPerWeek: $weightLossPerWeek) {
+                            WeightLossSpeedSelectionScreen(weightLossPerWeek: $weightLossPerWeek) {
+                                currentScreen = .twiceWeightLoss
+                            }
+                        case .twiceWeightLoss:
+                            TwiceWeightLossScreen {
                                 currentScreen = .goalObstacles
                             }
                         case .goalObstacles:
-                            GoalObstaclesSelectionView(selectedObstacle: $selectedObstacle) {
+                            GoalObstaclesSelectionScreen(selectedObstacle: $selectedObstacle) {
                                 currentScreen = .dietaryRestriction
                             }
                         case .dietaryRestriction:
-                            DietaryRestrictionSelectionView(selectedDiet: $selectedDiet) {
+                            DietaryRestrictionSelectionScreen(selectedDiet: $selectedDiet) {
                                 currentScreen = .achievementGoal
                             }
                         case .achievementGoal:
-                            AchievementGoalSelectionView(selectedGoal: $selectedGoal) {
+                            AchievementGoalSelectionScreen(selectedGoal: $selectedGoal) {
+                                currentScreen = .greatPotential
+                            }
+                        case .greatPotential:
+                            GreatPotentialScreen {
                                 currentScreen = .rating
                             }
                         case .rating:
-                            RatingView(rating: $rating) {
+                            RatingScreen(rating: $rating) {
+                                currentScreen = .notification
+                            }
+                        case .notification:
+                            NotificationScreen {
+                                currentScreen = .referralCode
+                            }
+                        case .referralCode:
+                            ReferralCodeScreen {
+                                currentScreen = .thankYou
+                            }
+                        case .thankYou:
+                            ThankYouScreen {
+                                currentScreen = .settingUp
+                            }
+                        case .settingUp:
+                            SettingUpScreen {
+                                currentScreen = .customPlansReady
+                            }
+                        case .customPlansReady:
+                            CustomPlansReadyScreen {
                                 currentScreen = .home
                             }
                         case .home:
-                            HomeView()
+                            HomeScreen()
+                        default:
+                            EmptyScreen()
                         }
                     }
                     .navigationBarHidden(true)
                 }
             }
         }
+    }
+}
+
+// EmptyScreenの構造体を定義
+struct EmptyScreen: View {
+    var body: some View {
+        Color.clear
     }
 }
 
@@ -142,14 +187,22 @@ enum OnboardingScreen {
     case workoutFrequency
     case source
     case calorieTrackingExperience
-    case weightTransition
+    case longTermResults
     case heightWeight
     case birthday
     case desiredWeight
+    case gainingWeight
     case weightLossSpeed
+    case twiceWeightLoss
     case goalObstacles
     case dietaryRestriction
     case achievementGoal
+    case greatPotential
     case rating
+    case notification
+    case referralCode
+    case thankYou
+    case settingUp
+    case customPlansReady
     case home
 }

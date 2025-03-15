@@ -8,7 +8,7 @@
 import SwiftUI
 import Charts
 
-struct HomeView: View {
+struct HomeScreen: View {
     @State private var selectedTab = 0
     @State private var showingAddMeal = false
     
@@ -264,7 +264,7 @@ struct NutrientLabel: View {
 }
 
 // 食事追加シート
-struct AddMealView: View {
+struct AddMealScreen: View {
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
@@ -296,5 +296,5 @@ struct Meal: Identifiable {
 }
 
 #Preview {
-    HomeView()
+    HomeScreen()
 }

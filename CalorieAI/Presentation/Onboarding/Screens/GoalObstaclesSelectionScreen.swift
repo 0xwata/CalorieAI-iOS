@@ -7,32 +7,19 @@
 
 import SwiftUI
 
-struct GoalObstaclesSelectionView: View {
+struct GoalObstaclesSelectionScreen: View {
     @Binding var selectedObstacle: String
     let onContinue: () -> Void
+    @Environment(\.presentationMode) var presentationMode
     
-    let obstacles = [
-        "Lack of consistency",
-        "Unhealthy eating habits",
-        "Lack of support",
-        "Busy schedule",
-        "Lack of meal inspiration"
-    ]
-    
-    let icons = [
-        "Lack of consistency": "📊",
-        "Unhealthy eating habits": "🍔",
-        "Lack of support": "👥",
-        "Busy schedule": "📅",
-        "Lack of meal inspiration": "🍽️"
-    ]
+    let obstacles = ["Lack of consistency", "Unhealthy eating habits", "Lack of support", "Busy schedule", "Lack of meal inspiration"]
     
     var body: some View {
         VStack(spacing: 20) {
-            // 戻るボタンと進捗バー
+            // 戻るボタン
             HStack {
                 Button(action: {
-                    // 戻るアクション
+                    presentationMode.wrappedValue.dismiss()
                 }) {
                     Image(systemName: "arrow.left")
                         .font(.title2)
@@ -78,27 +65,34 @@ struct GoalObstaclesSelectionView: View {
             
             // メインコンテンツ
             VStack(alignment: .leading, spacing: 16) {
+                Image("IMG_8950")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 200)
+                
                 Text("What's stopping you from reaching your goals?")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .accessibilityAddTraits(.isHeader)
                 
+                Text("This will be used to calibrate your custom plan.")
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                    .accessibilityLabel("この情報はあなたのカスタムプランの作成に使用されます")
+                
                 Spacer()
                     .frame(height: 40)
                 
-                // 障害要因選択
+                // 障害選択ボタン
                 ForEach(obstacles, id: \.self) { obstacle in
                     Button(action: {
                         selectedObstacle = obstacle
                     }) {
                         HStack {
-                            Text(icons[obstacle] ?? "")
-                                .font(.title2)
-                                .padding(.trailing, 8)
-                            
                             Text(obstacle)
                                 .font(.title3)
                                 .fontWeight(.medium)
+                                .foregroundColor(.primary)
                             
                             Spacer()
                         }
@@ -111,8 +105,8 @@ struct GoalObstaclesSelectionView: View {
                         .foregroundColor(selectedObstacle == obstacle ? .white : .primary)
                     }
                     .buttonStyle(PlainButtonStyle())
-                    .accessibilityLabel("\(obstacle)が目標達成の障害です")
-                    .accessibilityHint("タップして選択します")
+                    .accessibilityLabel("\(obstacle)を選択")
+                    .accessibilityHint("タップして\(obstacle)を選択します")
                     .accessibilityAddTraits(.isButton)
                     .accessibilityValue(selectedObstacle == obstacle ? "選択中" : "")
                 }
@@ -131,16 +125,13 @@ struct GoalObstaclesSelectionView: View {
                         .padding()
                         .background(
                             RoundedRectangle(cornerRadius: 30)
-                                .fill(Color.gray)
+                                .fill(Color.black)
                         )
                 }
                 .buttonStyle(PlainButtonStyle())
-                .disabled(selectedObstacle.isEmpty)
-                .opacity(selectedObstacle.isEmpty ? 0.6 : 1)
                 .accessibilityLabel("続行")
                 .accessibilityHint("次の画面に進みます")
                 .accessibilityAddTraits(.isButton)
-                .accessibilityValue(selectedObstacle.isEmpty ? "障害が選択されていません" : "障害が選択されています")
             }
             .padding()
         }
@@ -148,5 +139,5 @@ struct GoalObstaclesSelectionView: View {
 }
 
 #Preview {
-    GoalObstaclesSelectionView(selectedObstacle: .constant("Lack of consistency"), onContinue: {})
+    GoalObstaclesSelectionScreen(selectedObstacle: .constant("Lack of consistency"), onContinue: {})
 }

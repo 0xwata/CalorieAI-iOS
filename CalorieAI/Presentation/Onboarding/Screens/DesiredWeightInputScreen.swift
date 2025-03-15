@@ -7,21 +7,18 @@
 
 import SwiftUI
 
-struct DesiredWeightInputView: View {
-    let currentWeight: Double
+struct DesiredWeightInputScreen: View {
+    @Binding var currentWeight: Double
     @Binding var targetWeight: Double
     let onContinue: () -> Void
-    
-    // 体重の範囲設定
-    let minWeight: Double = 40.0
-    let maxWeight: Double = 150.0
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         VStack(spacing: 20) {
-            // 戻るボタンと進捗バー
+            // 戻るボタン
             HStack {
                 Button(action: {
-                    // 戻るアクション
+                    presentationMode.wrappedValue.dismiss()
                 }) {
                     Image(systemName: "arrow.left")
                         .font(.title2)
@@ -67,49 +64,40 @@ struct DesiredWeightInputView: View {
             
             // メインコンテンツ
             VStack(alignment: .leading, spacing: 16) {
-                Text("What is your desired weight?")
+                Image("IMG_8945")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 200)
+                
+                Text("What is your goal?")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .accessibilityAddTraits(.isHeader)
                 
+                Text("This will be used to calibrate your custom plan.")
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                    .accessibilityLabel("この情報はあなたのカスタムプランの作成に使用されます")
+                
                 Spacer()
                     .frame(height: 40)
                 
-                // 目標設定
-                VStack(alignment: .center, spacing: 20) {
+                // 目標体重入力
+                HStack {
                     Text("Lose weight")
-                        .font(.headline)
-                        .foregroundColor(.secondary)
-                        .accessibilityAddTraits(.isHeader)
+                        .font(.title3)
+                        .fontWeight(.medium)
+                        .foregroundColor(.primary)
                     
-                    // 目標体重表示
-                    Text("\(String(format: "%.1f", targetWeight)) kg")
-                        .font(.system(size: 48, weight: .bold))
-                        .accessibilityLabel("目標体重")
-                        .accessibilityValue("\(String(format: "%.1f", targetWeight))キログラム")
+                    Spacer()
                     
-                    // スライダー
-                    Slider(value: $targetWeight, in: minWeight...currentWeight)
-                        .accentColor(.black)
-                        .accessibilityLabel("目標体重の調整")
-                        .accessibilityValue("\(String(format: "%.1f", targetWeight))キログラム")
-                        .accessibilityHint("左右にスワイプして目標体重を調整してください。最小\(String(format: "%.1f", minWeight))キログラムから最大\(String(format: "%.1f", currentWeight))キログラムまで設定できます。")
-                    
-                    // 目盛り
-                    HStack {
-                        ForEach(0..<10) { _ in
-                            Rectangle()
-                                .fill(Color.gray.opacity(0.5))
-                                .frame(width: 1, height: 10)
-                            Spacer()
-                        }
-                        Rectangle()
-                            .fill(Color.gray.opacity(0.5))
-                            .frame(width: 1, height: 10)
-                    }
-                    .padding(.horizontal)
+                    Text("\(targetWeight, specifier: "%.1f") kg")
+                        .font(.title3)
+                        .fontWeight(.medium)
+                        .foregroundColor(.primary)
                 }
-                .padding()
+                
+                Slider(value: $targetWeight, in: (currentWeight - 50)...currentWeight, step: 0.1)
                 
                 Spacer()
                 
@@ -139,5 +127,9 @@ struct DesiredWeightInputView: View {
 }
 
 #Preview {
-    DesiredWeightInputView(currentWeight: 75.0, targetWeight: .constant(72.0), onContinue: {})
+    DesiredWeightInputScreen(
+        currentWeight: .constant(72.5),
+        targetWeight: .constant(68.0),
+        onContinue: {}
+    )
 }

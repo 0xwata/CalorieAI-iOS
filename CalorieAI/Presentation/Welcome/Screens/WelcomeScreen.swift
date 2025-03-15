@@ -10,6 +10,7 @@ import Combine
 
 struct WelcomeScreen: View {
     var onComplete: () -> Void
+    var onGoToHome: () -> Void
     
     @State private var showLanguageSelection: Bool = false
     @State private var selectedLanguage: String = "English"
@@ -102,6 +103,21 @@ struct WelcomeScreen: View {
                 }
                 .padding(.horizontal, 20)
                 
+                // Go to Homeボタン（デバッグ用）
+                Button(action: {
+                    onGoToHome()
+                }) {
+                    Text("Go to Home")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.gray)
+                        .cornerRadius(30)
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 10)
+                
                 // Sign Inリンク
                 HStack {
                     Text("Purchased on the web?")
@@ -118,7 +134,7 @@ struct WelcomeScreen: View {
             
             // 言語選択ダイアログ
             if showLanguageSelection {
-                LanguageDialogView(
+                LanguageDialog(
                     languages: languages,
                     isPresented: $showLanguageSelection,
                     selectedLanguage: $selectedLanguage,
@@ -145,14 +161,18 @@ struct WelcomeScreen: View {
 }
 
 // For backward compatibility
-struct WelcomeScreenView: View {
+struct WelcomeScreenScreen: View {
     var onComplete: () -> Void = {}
+    var onGoToHome: () -> Void = {}
     
     var body: some View {
-        WelcomeScreen(onComplete: onComplete)
+        WelcomeScreen(
+            onComplete: onComplete,
+            onGoToHome: onGoToHome
+        )
     }
 }
 
 #Preview {
-    WelcomeScreen(onComplete: {})
+    WelcomeScreen(onComplete: {}, onGoToHome: {})
 }
